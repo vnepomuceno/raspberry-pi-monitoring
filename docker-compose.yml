@@ -1,12 +1,11 @@
-version: '3.5'
 services:
 
   grafana:
-    image: grafana/grafana-oss:latest
+    image: grafana/grafana-oss:latest-arm
     container_name: monitoring-grafana
     hostname: rpi-grafana
     restart: unless-stopped
-    user: $(id -u):$(id -g) # Dynamic user mapping
+    user: "472:472"
     networks:
       - internal
     ports:
@@ -33,6 +32,7 @@ services:
       - '-housekeeping_interval=15s'
       - '-docker_only=true'
       - '-store_container_labels=false'
+      - '--enable_cgroup_v2=true'
     devices:
       - /dev/kmsg
     volumes:
@@ -65,7 +65,7 @@ services:
       - /:/host:ro,rslave
 
   prometheus:
-    image: prom/prometheus:latest
+    image: prom/prometheus:latest-arm
     container_name: monitoring-prometheus
     hostname: rpi-prometheus
     restart: unless-stopped
